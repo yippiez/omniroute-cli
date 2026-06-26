@@ -9,7 +9,7 @@
  *
  * No retries, no backoff, no circuit-breaker — by design. If you want
  * "try the next free provider on failure", do it in your own loop or use the
- * `chat()` fallback in `index.ts`.
+ * `chat()` fallback in the `OmniRouter` class.
  */
 
 import type { ChatChunk, ChatCompletion, ChatParams, ProviderDef } from "./types.ts";

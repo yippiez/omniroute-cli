@@ -1,4 +1,4 @@
-import type { ProviderDef } from "../types.ts";
+import type { ProviderDef } from "../core/types.ts";
 
 /**
  * Puter AI — OpenAI-compatible gateway exposing 500+ models (GPT, Claude,

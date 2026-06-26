@@ -1,4 +1,4 @@
-import type { ProviderDef } from "../types.ts";
+import type { ProviderDef } from "../core/types.ts";
 
 /**
  * Pollinations — keyless, anonymous OpenAI-compatible gateway.
