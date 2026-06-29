@@ -7,7 +7,7 @@
  * services layer and were intentionally dropped).
  */
 import type { ProviderDef } from "./types.ts";
-import { PROVIDERS } from "./providers/index.ts";
+import { PROVIDERS } from "../providers/index.ts";
 
 export { PROVIDERS };
 
@@ -34,7 +34,6 @@ export function getProvider(idOrAlias: string): ProviderDef | undefined {
   return byId.get(idOrAlias);
 }
 
-/** Every known free model as `provider/model` entries. */
 /** The virtual model ids that auto-route across providers. */
 export const AUTO = "auto";
 export const AUTO_CODING = "auto/coding";
@@ -47,17 +46,20 @@ export const AUTO_CODING = "auto/coding";
  * Edit these lists to change auto-routing priority.
  */
 export const AUTO_CHAINS: Record<string, string[]> = {
+  // uncloseai leads both chains: it is the only currently keyless provider, so
+  // `auto` works with zero config. The others now require an optional token
+  // (pass one with `--key provider=TOKEN`) and act as fall-throughs.
   [AUTO]: [
+    "uncloseai/adamo1139/Hermes-3-Llama-3.1-8B-FP8-Dynamic",
     "pollinations/openai-fast",
     "pollinations/openai",
-    "uncloseai/adamo1139/Hermes-3-Llama-3.1-8B-FP8-Dynamic",
     "hackclub/meta-llama/llama-3.3-70b-instruct",
     "puter/gpt-4o-mini",
   ],
   [AUTO_CODING]: [
+    "uncloseai/qwen3.6:27b",
     "pollinations/qwen-coder",
     "hackclub/deepseek-ai/deepseek-coder-33b",
-    "uncloseai/qwen3.6:27b",
     "puter/codestral-2508",
     "pollinations/deepseek",
   ],

@@ -1,4 +1,4 @@
-import type { ProviderDef } from "../types.ts";
+import type { ProviderDef } from "../core/types.ts";
 
 /**
  * UncloseAI (unturf Hermes) — free, keyless OpenAI-compatible endpoint.

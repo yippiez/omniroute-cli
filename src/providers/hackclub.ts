@@ -1,4 +1,4 @@
-import type { ProviderDef } from "../types.ts";
+import type { ProviderDef } from "../core/types.ts";
 
 /**
  * Hack Club AI — free, keyless OpenAI-compatible proxy for students/hackers.

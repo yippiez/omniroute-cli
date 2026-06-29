@@ -1,37 +1,28 @@
 {
-  "name": "free-models",
+  "name": "omnirouter-cli",
   "version": "0.1.0",
-  "description": "Tiny TS library exposing free, keyless AI providers as one OpenAI-compatible provider.",
+  "description": "OmniRouter — a CLI and tiny TS library exposing free, keyless AI providers as one OpenAI-compatible client, with structured JSON output, tool calling, and a local OpenAI-compatible server.",
   "type": "module",
+  "private": true,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./api": {
-      "types": "./dist/api.d.ts",
-      "import": "./dist/api.js"
     }
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "llm": "./dist/llm.js"
+    "omnirouter": "./dist/cli/main.js"
   },
   "files": [
     "dist",
-    "index.ts",
-    "api.ts",
-    "llm.ts",
-    "client.ts",
-    "registry.ts",
-    "types.ts",
-    "providers"
+    "src"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "llm": "node --import tsx/esm llm.ts",
+    "omnirouter": "node --import tsx/esm src/cli/main.ts",
     "test": "node --import tsx/esm --test test/*.test.ts"
   },
   "engines": {
@@ -49,7 +40,8 @@
     "openai-compatible",
     "pollinations",
     "puter",
-    "keyless"
+    "keyless",
+    "omnirouter"
   ],
   "license": "MIT"
 }

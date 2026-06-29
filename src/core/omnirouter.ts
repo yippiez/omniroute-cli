@@ -1,58 +1,30 @@
 /**
- * free-models — a tiny library that exposes a handful of free, keyless AI
- * providers as a single OpenAI-compatible provider.
+ * OmniRouter — exposes a handful of free, keyless AI providers as a single
+ * OpenAI-compatible client.
  *
- * Point a coding agent at one `FreeModels` instance and it can call any free
+ * Point a coding agent at one `OmniRouter` instance and it can call any free
  * model below, with optional automatic fail-over across providers that serve
  * the same model id.
  *
  * @example
  * ```ts
- * import { FreeModels } from "free-models";
- * const ai = new FreeModels();
- * const res = await ai.chat({ model: "openai", messages: [{ role: "user", content: "hi" }] });
+ * import { OmniRouter } from "omnirouter-cli";
+ * const ai = new OmniRouter();
+ * const res = await ai.chat({ model: "auto", messages: [{ role: "user", content: "hi" }] });
  * console.log(res.choices[0].message.content);
  *
- * for await (const chunk of ai.stream({ model: "openai", messages: [...] })) {
+ * for await (const chunk of ai.stream({ model: "auto", messages: [...] })) {
  *   process.stdout.write(chunk.choices[0]?.delta?.content ?? "");
  * }
  * ```
  */
-import { chatCompletion, chatStream, ProviderHttpError, streamToText } from "./client.ts";
-import {
-  AUTO,
-  AUTO_CODING,
-  AUTO_CHAIN,
-  AUTO_CHAINS,
-  listModels,
-  listProviders,
-  resolveModel,
-} from "./registry.ts";
+import { chatCompletion, chatStream, streamToText } from "./client.ts";
+import { AUTO, resolveModel, listModels, listProviders } from "./registry.ts";
 import type { CallOptions } from "./client.ts";
-import type { ChatChunk, ChatCompletion, ChatParams, ModelDef } from "./types.ts";
+import type { ChatChunk, ChatCompletion, ChatParams } from "./types.ts";
 import type { ModelEntry } from "./registry.ts";
 
-export * from "./types.ts";
-export {
-  chatCompletion,
-  chatStream,
-  streamToText,
-  ProviderHttpError,
-  listModels,
-  listProviders,
-  resolveModel,
-  AUTO,
-  AUTO_CODING,
-  AUTO_CHAIN,
-  AUTO_CHAINS,
-};
-export { PROVIDERS } from "./providers/index.ts";
-export { ask, DEFAULT_MODEL } from "./api.ts";
-export type { AskOptions } from "./api.ts";
-export type { CallOptions } from "./client.ts";
-export type { ModelEntry, ResolvedModel } from "./registry.ts";
-
-export interface FreeModelsOptions {
+export interface OmniRouterOptions {
   /** Optional per-provider bearer tokens, keyed by provider id (e.g. `{ puter: "..." }`). */
   keys?: Record<string, string>;
   /** Override the global fetch (for tests / proxies). */
@@ -81,8 +53,8 @@ export class NoProviderError extends Error {
   }
 }
 
-export class FreeModels {
-  constructor(private opts: FreeModelsOptions = {}) {}
+export class OmniRouter {
+  constructor(private opts: OmniRouterOptions = {}) {}
 
   /** All free models as `provider/model` entries. */
   listModels(): ModelEntry[] {
@@ -157,6 +129,4 @@ export class FreeModels {
 }
 
 /** A ready-to-use default instance (no keys configured). */
-export const freeModels = new FreeModels();
-
-export type { ChatCompletion, ChatChunk, ChatParams, ModelDef };
+export const omniRouter = new OmniRouter();

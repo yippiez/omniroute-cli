@@ -1,5 +1,5 @@
 /**
- * Core types for the free-models library.
+ * Core types for OmniRouter.
  *
  * Everything here is provider-agnostic and OpenAI-Chat-Completions shaped, so a
  * coding agent can treat the whole library as a single OpenAI-compatible
@@ -12,11 +12,47 @@ export type Role = "system" | "user" | "assistant" | "tool";
 
 export interface ChatMessage {
   role: Role;
-  content: string;
+  content: string | null;
   name?: string;
   tool_call_id?: string;
+  /** Assistant tool-call requests (OpenAI shape), present on assistant turns. */
+  tool_calls?: ToolCall[];
   [extra: string]: unknown;
 }
+
+/** An OpenAI-style function tool the model may call. */
+export interface Tool {
+  type: "function";
+  function: {
+    name: string;
+    description?: string;
+    /** JSON Schema for the function arguments. */
+    parameters?: Record<string, unknown>;
+  };
+}
+
+/** A tool call emitted by the model. */
+export interface ToolCall {
+  id: string;
+  type: "function";
+  function: {
+    name: string;
+    /** Raw JSON string of arguments, as returned by the model. */
+    arguments: string;
+  };
+}
+
+/**
+ * OpenAI-style structured-output request. `json_object` asks for "any valid
+ * JSON"; `json_schema` constrains it to a schema (when the provider supports it).
+ */
+export type ResponseFormat =
+  | { type: "text" }
+  | { type: "json_object" }
+  | {
+      type: "json_schema";
+      json_schema: { name: string; schema: Record<string, unknown>; strict?: boolean };
+    };
 
 /** OpenAI-compatible chat request parameters. `model` is filled in by the client. */
 export interface ChatParams {
@@ -27,6 +63,9 @@ export interface ChatParams {
   top_p?: number;
   stop?: string | string[];
   stream?: boolean;
+  tools?: Tool[];
+  tool_choice?: "auto" | "none" | "required" | { type: "function"; function: { name: string } };
+  response_format?: ResponseFormat;
   /** Any extra OpenAI-style field is passed through untouched. */
   [extra: string]: unknown;
 }
@@ -73,7 +112,7 @@ export interface ChatCompletion {
   model?: string;
   choices: Array<{
     index: number;
-    message: { role: Role; content: string | null };
+    message: { role: Role; content: string | null; tool_calls?: ToolCall[] };
     finish_reason: string | null;
   }>;
   usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
